@@ -1,0 +1,22 @@
+.reelmind-bar {
+  position: fixed; right: 20px; bottom: 20px; z-index: 2147483000;
+  display: flex; align-items: center; gap: 6px; padding: 6px;
+  background: #fff; border: 1px solid #e4e7ec; border-radius: 999px;
+  box-shadow: 0 12px 32px -12px rgba(16, 24, 40, .35);
+  font: 500 13px/1 system-ui, -apple-system, "Segoe UI", sans-serif; color: #101828;
+}
+.reelmind-dot { width: 22px; height: 22px; margin-left: 2px; border-radius: 7px; background: #101828; box-shadow: inset 0 0 0 6px #101828, inset 0 0 0 9px #facc15; }
+.reelmind-bar button {
+  all: unset; cursor: pointer; padding: 8px 12px; border-radius: 999px; font: inherit; color: inherit;
+}
+.reelmind-bar button:hover { background: #f2f4f7; }
+.reelmind-bar button.reelmind-primary { background: #facc15; font-weight: 600; }
+.reelmind-bar button.reelmind-primary:hover { background: #eab308; }
+.reelmind-bar button:disabled { opacity: .6; cursor: default; }
+.reelmind-toast {
+  position: fixed; left: 50%; bottom: 84px; z-index: 2147483001; transform: translate(-50%, 12px); opacity: 0;
+  max-width: 360px; padding: 10px 16px; border-radius: 999px; background: #101828; color: #fff;
+  font: 500 13.5px/1.35 system-ui, -apple-system, "Segoe UI", sans-serif; transition: opacity .2s, transform .2s;
+}
+.reelmind-toast.reelmind-show { opacity: 1; transform: translate(-50%, 0); }
+.reelmind-toast-error { background: #b42318; }

@@ -1,0 +1,22 @@
+{
+  "name": "@reelmind/helper",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Local helper for ReelMind: fetches reels with yt-dlp and analyzes them with Gemini.",
+  "license": "AGPL-3.0-only",
+  "bin": {
+    "reelmind": "src/cli.js"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env src/cli.js",
+    "demo": "node --env-file-if-exists=.env src/cli.js --demo",
+    "serve": "node --env-file-if-exists=.env src/cli.js --serve-web",
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.135.0",
+    "@google/genai": "^2.30.0",
+    "express": "^5.1.0"
+  }
+}

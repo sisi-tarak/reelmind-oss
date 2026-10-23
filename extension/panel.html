@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="panel.css" />
+  </head>
+  <body>
+    <header>
+      <img src="icons/32.png" width="24" height="24" alt="" />
+      <strong>ReelMind</strong>
+      <span id="status" class="pill">Checking…</span>
+    </header>
+
+    <section class="card">
+      <h2>This reel</h2>
+      <p id="reel" class="muted">Open a reel on Instagram.</p>
+      <div class="row">
+        <button id="add" disabled>+ Add to list</button>
+        <button id="send" disabled>Send</button>
+        <button id="analyze" class="primary" disabled>Analyze now</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="head">
+        <h2>List <span id="count" class="badge">0</span></h2>
+        <button id="collect" class="link" title="Adds every reel and post linked on the page you're on, such as your Saved page or a profile grid">Add all on this page</button>
+      </div>
+      <p class="muted small">Collect reels as you scroll, then send them together. The list is kept if you close this panel.</p>
+      <ul id="list"></ul>
+      <div class="row">
+        <button id="sendAll" disabled>Send all</button>
+        <button id="analyzeAll" class="primary" disabled>Send all and analyze</button>
+      </div>
+      <button id="clear" class="link danger" hidden>Clear list</button>
+    </section>
+
+    <p id="result" class="result" role="status"></p>
+
+    <details id="setup">
+      <summary>Connection</summary>
+      <label>Connect code<input id="code" type="password" autocomplete="off" placeholder="Printed when the helper starts" /></label>
+      <label>Helper address<input id="helperUrl" type="url" /></label>
+      <label>ReelMind app<input id="appUrl" type="url" /></label>
+      <button id="save">Save</button>
+    </details>
+    <footer><a id="open" href="#" target="_blank">Open ReelMind</a></footer>
+    <script type="module" src="panel.js"></script>
+  </body>
+</html>

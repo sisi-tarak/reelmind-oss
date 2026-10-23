@@ -1,0 +1,11 @@
+node_modules/
+dist/
+data/
+.env
+*.log
+.DS_Store
+cookies.txt
+*.tsbuildinfo
+helper/*.exe
+.env.local
+.data/

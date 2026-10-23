@@ -1,0 +1,183 @@
+@import 'tailwindcss';
+@import '@xyflow/react/dist/style.css';
+
+/*
+  ReelMind palette, light only: a quiet workflow canvas so the meaning colours
+  (see src/lib/emotion.tsx) are the only strong colours on screen.
+*/
+:root {
+  color-scheme: light;
+  --canvas: #f4f5f7;
+  --canvas-dot: #cdd2da;
+  --background: #ffffff;
+  --foreground: #1f2430;
+  --muted: #f2f4f7;
+  --muted-foreground: #667085;
+  --border: #e1e4e9;
+  --input: #d0d5dd;
+  --primary: #1f2430;
+  --primary-foreground: #ffffff;
+  --highlight: #ffd84d;
+  --highlight-foreground: #3d3000;
+  --success: #16a34a;
+  --destructive: #e5484d;
+  --ring: #1f2430;
+  --wire: #b4bac4;
+  --radius: 10px;
+}
+
+@theme inline {
+  --font-sans: 'Schibsted Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --color-canvas: var(--canvas);
+  --color-canvas-dot: var(--canvas-dot);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-highlight: var(--highlight);
+  --color-highlight-foreground: var(--highlight-foreground);
+  --color-success: var(--success);
+  --color-destructive: var(--destructive);
+  --color-ring: var(--ring);
+  --color-wire: var(--wire);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    @apply bg-canvas text-foreground font-sans antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* React Flow, quieted to match the board */
+.react-flow__attribution {
+  background: transparent;
+  font-size: 10px;
+  opacity: 0.6;
+}
+.react-flow__controls {
+  box-shadow: none;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.react-flow__controls-button {
+  background: var(--background);
+  border-bottom: 1px solid var(--border);
+  width: 30px;
+  height: 30px;
+}
+.react-flow__controls-button:hover {
+  background: var(--muted);
+}
+/* Small round ports on the sides of each node, like a workflow editor */
+.react-flow__handle {
+  width: 9px;
+  height: 9px;
+  background: #ffffff;
+  border: 1.5px solid var(--wire);
+  min-width: 0;
+  min-height: 0;
+}
+.react-flow__node {
+  transition: opacity 160ms ease;
+}
+.react-flow__node.dimmed,
+.react-flow__edge.dimmed {
+  opacity: 0.18;
+}
+.react-flow__node.selected .reel-tile {
+  outline: 2px solid var(--foreground);
+  outline-offset: 3px;
+}
+.react-flow__edge-textbg {
+  fill: var(--canvas);
+}
+.react-flow__minimap {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+@keyframes landed {
+  from {
+    box-shadow: 0 0 0 6px var(--highlight);
+  }
+  to {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+.reel-tile[data-new='true'] {
+  animation: landed 1.6s ease-out 1;
+}
+
+/* While exporting a picture, show everything at full strength */
+.exporting .react-flow__node.dimmed,
+.exporting .react-flow__edge.dimmed {
+  opacity: 1;
+}
+
+/* View mode: a plain arrow like Figma's hand-free canvas; grabbing only while panning */
+.board-view .react-flow__pane {
+  cursor: default;
+}
+.board-view .react-flow__pane.dragging {
+  cursor: grabbing;
+}
+/* Edit mode: everything can be moved */
+.board-edit .react-flow__pane {
+  cursor: default;
+}
+.board-edit .react-flow__node {
+  cursor: move;
+}
+.board-edit .react-flow__node > * {
+  cursor: move;
+}
+.board-edit .react-flow__node.selected > div {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+  border-radius: 14px;
+}
+.board-edit .react-flow__node-section.selected > div {
+  outline-offset: 0;
+}
+.react-flow__selection {
+  background: rgb(37 99 235 / 0.06);
+  border: 1px solid #2563eb;
+}
+.react-flow__nodesselection-rect {
+  background: transparent;
+  border: 1px dashed #2563eb;
+}
+.exporting .react-flow__node.selected > div {
+  outline: none;
+}

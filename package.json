@@ -1,0 +1,28 @@
+{
+  "name": "reelmind",
+  "version": "1.4.0",
+  "private": true,
+  "description": "Turn your saved Instagram reels into a visual knowledge workspace. Local-first and open source.",
+  "license": "AGPL-3.0-only",
+  "workspaces": [
+    "web",
+    "helper"
+  ],
+  "scripts": {
+    "dev": "concurrently -n helper,web -c magenta,cyan \"npm run start -w helper\" \"npm run dev -w web\"",
+    "dev:demo": "concurrently -n helper,web -c magenta,cyan \"npm run demo -w helper\" \"npm run dev -w web\"",
+    "helper": "npm run start -w helper",
+    "helper:demo": "npm run demo -w helper",
+    "build": "npm run build -w web",
+    "start": "npm run build && npm run serve -w helper",
+    "typecheck": "npm run typecheck -w web",
+    "test": "npm run test -w web && npm run test -w helper",
+    "sample": "node scripts/make-sample.mjs"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
