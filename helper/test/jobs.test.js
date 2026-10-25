@@ -74,7 +74,7 @@ test('other websites need the connect code', async () => {
     const health = await (await fetch(`${base}/api/health`, { headers: { Origin: 'https://evil.example' } })).json();
     assert.equal(health.needsCode, true);
     assert.equal(health.gemini, undefined, 'no details leak without the code');
-    const allowed = await fetch(`${base}/api/jobs/current`, { headers: { Origin: 'https://reelmind-tau.vercel.app', 'X-ReelMind-Code': code } });
+    const allowed = await fetch(`${base}/api/jobs/current`, { headers: { Origin: 'https://reelmind-oss.vercel.app', 'X-ReelMind-Code': code } });
     assert.equal(allowed.status, 200);
     const local = await fetch(`${base}/api/jobs/current`, { headers: { Origin: 'http://localhost:5173' } });
     assert.equal(local.status, 200);
@@ -215,6 +215,7 @@ test('many inbox saves at the same moment never fail or lose reels', async () =>
     server.close();
   }
 });
+
 test('an overloaded provider is told apart from a used-up quota', async () => {
   const { isServerBusy } = await import('../src/ai.js');
   assert.equal(isServerBusy({ message: '{"error":{"code":503,"message":"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.","status":"UNAVAILABLE"}}' }), true);

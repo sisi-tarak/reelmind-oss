@@ -5,7 +5,7 @@ Send Instagram reels to your ReelMind helper, one at a time or in bulk. The exte
 ## Install (Chrome, Edge, Brave)
 
 1. Start the helper: `npm run helper`. Note the connect code it prints.
-2. Open `chrome://extensions`, turn on **Developer mode**, click **Load unpacked** and pick this `extension` folder. If you installed an older version, click the reload icon on its card instead.
+2. Get the extension: download `reelmind-extension-<version>.zip` from the [latest release](https://github.com/sisi-tarak/reelmind-oss/releases/latest) and unzip it, or use the `extension` folder of this repository. Open `chrome://extensions`, turn on **Developer mode**, click **Load unpacked** and pick that folder. If you installed an older version, click the reload icon on its card instead.
 3. Click the ReelMind icon in the toolbar. The side panel opens. Open **Connection**, paste the connect code and click **Save**.
 
 ## Use

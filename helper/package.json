@@ -1,6 +1,6 @@
 {
   "name": "@reelmind/helper",
-  "version": "1.1.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "description": "Local helper for ReelMind: fetches reels with yt-dlp and analyzes them with Gemini.",

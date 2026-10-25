@@ -8,14 +8,15 @@
 
 Local-first · Free and open source · Bring your own AI key
 
-[Live demo](https://reelmind-tau.vercel.app) · [Quick start](#quick-start) · [Features](#features) · [Contributing](CONTRIBUTING.md) · [Licence](#licence)
+[Live demo](https://reelmind-oss.vercel.app) · [Quick start](#quick-start) · [Features](#features) · [Contributing](CONTRIBUTING.md) · [Licence](#licence)
 
+![Version 1.0.0](https://img.shields.io/github/v/release/sisi-tarak/reelmind-oss?label=version&color=1f2430)
 ![Licence: AGPL-3.0](https://img.shields.io/badge/licence-AGPL--3.0-1f2430)
 ![Node 22+](https://img.shields.io/badge/node-22%2B-1f2430)
 ![CI](https://github.com/sisi-tarak/reelmind-oss/actions/workflows/ci.yml/badge.svg)
 ![PRs welcome](https://img.shields.io/badge/PRs-welcome-ffd84d)
 
-<img src="docs/screenshots/board.png" alt="The workflow board: topics on coloured notes, each wired to its reels and the tools they use" width="100%" />
+<img src="docs/demo.gif" alt="ReelMind demo: sample reels become a workflow board, a reel opens into notes, the library shows Claude skills and code, and a flashcard comes up for review" width="100%" />
 
 </div>
 
@@ -31,7 +32,7 @@ On top of that, related reels link to each other, topics merge into learning pat
 
 Your reels, notes and API keys stay on your computer. Nothing is downloaded or analyzed until you click **Analyze**, and no reel is ever analyzed twice.
 
-> **Try it in 10 seconds:** open the [live demo](https://reelmind-tau.vercel.app) and click **Try with 16 sample reels**. No install, no account.
+> **Try it in 10 seconds:** open the [live demo](https://reelmind-oss.vercel.app) and click **Try with 16 sample reels**. No install, no account.
 
 ## Contents
 
@@ -182,7 +183,7 @@ npm run helper
 The first run asks for your Gemini key and saves it to `helper/.env`. The helper then prints a link like this:
 
 ```
-Hosted app:    https://reelmind-tau.vercel.app/#connect=<your code>
+Hosted app:    https://reelmind-oss.vercel.app/#connect=<your code>
 Connect code:  <your code>
 ```
 
@@ -229,7 +230,12 @@ A Chrome/Edge side panel that stays open while you browse Instagram:
 - Send or analyze the reel you're watching.
 - Collect many reels (even a whole Saved page) and send them together.
 
-To install it, load the `extension/` folder unpacked. See [extension/README.md](extension/README.md).
+**Install:**
+1. Download `reelmind-extension-1.0.0.zip` from the [latest release](https://github.com/sisi-tarak/reelmind-oss/releases/latest) and unzip it.
+2. Open `chrome://extensions`, turn on **Developer mode** and click **Load unpacked**.
+3. Pick the unzipped folder.
+
+Full guide: [extension/README.md](extension/README.md).
 
 ## Configuration
 
@@ -344,14 +350,14 @@ reelmind/
     src/server.js        API and connect-code checks
   extension/             browser extension (load unpacked)
   scripts/               Windows installer, sample builder
-  docs/screenshots/      images used in this README
+  docs/                  demo GIF and screenshots used in this README
   firestore.rules        security rules for optional sync
   examples/              a sample export for trying the app
 ```
 
 ## Contributing
 
-Contributions are welcome: bug reports, ideas, docs, translations and code. Read [CONTRIBUTING.md](CONTRIBUTING.md) to get set up, and please be kind in issues and reviews.
+Contributions are welcome: bug reports, ideas, docs, translations and code. Read [CONTRIBUTING.md](CONTRIBUTING.md) to get set up, and follow our [Code of Conduct](CODE_OF_CONDUCT.md). What changed in each version is in the [CHANGELOG](CHANGELOG.md).
 
 Good first contributions:
 - Improve the import parser for new Instagram export formats.

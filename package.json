@@ -1,6 +1,6 @@
 {
   "name": "reelmind",
-  "version": "1.4.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Turn your saved Instagram reels into a visual knowledge workspace. Local-first and open source.",
   "license": "AGPL-3.0-only",

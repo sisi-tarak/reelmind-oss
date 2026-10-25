@@ -29,7 +29,7 @@ export const config = {
   dataDir: demo ? path.join(baseDataDir, 'demo') : baseDataDir,
   webDist: path.join(REPO_ROOT, 'web', 'dist'),
   // The hosted web app. The helper prints a one-click link to connect it.
-  appUrl: (env.REELMIND_APP_URL || 'https://reelmind-tau.vercel.app').replace(/\/$/, ''),
+  appUrl: (env.REELMIND_APP_URL || 'https://reelmind-oss.vercel.app').replace(/\/$/, ''),
   // Which AI analyzes new reels when the app doesn't ask for one.
   defaultProvider: env.AI_PROVIDER === 'claude' ? 'claude' : 'gemini',
   gemini: {

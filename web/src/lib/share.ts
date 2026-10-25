@@ -3,7 +3,7 @@
 import type { SummaryItem } from './summary';
 import type { TopicBoard } from './types';
 
-export const PUBLIC_APP_URL = (import.meta.env.VITE_PUBLIC_URL as string | undefined) || 'https://reelmind-tau.vercel.app';
+export const PUBLIC_APP_URL = (import.meta.env.VITE_PUBLIC_URL as string | undefined) || 'https://reelmind-oss.vercel.app';
 const MAX_REELS = 40;
 const MAX_LINK = 60000;
 

@@ -12,7 +12,7 @@ import { phoneLink, remoteState } from './tunnel.js';
 import { makeFlashcards } from './flashcards.js';
 import { detectTools } from './tools.js';
 
-export const VERSION = '1.4.0';
+export const VERSION = '1.0.0';
 
 const REEL_URL = /(?:instagram\.com|instagr\.am)\/(?:[A-Za-z0-9_.]{1,30}\/)?(?:reel|reels|p|tv)\/([A-Za-z0-9_-]{5,64})/i;
 

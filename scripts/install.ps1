@@ -112,7 +112,7 @@ if (-not (Get-EnvValue $text 'ANTHROPIC_API_KEY')) {
   if (-not [string]::IsNullOrWhiteSpace($claude)) { $text = Set-EnvValue $text 'ANTHROPIC_API_KEY' $claude.Trim() }
 }
 $appUrl = Get-EnvValue $text 'REELMIND_APP_URL'
-if (-not $appUrl -or $appUrl -eq 'https://reelmind.vercel.app') { $appUrl = 'https://reelmind-tau.vercel.app' }
+if (-not $appUrl -or $appUrl -match '^https://reelmind(-tau)?\.vercel\.app$') { $appUrl = 'https://reelmind-oss.vercel.app' }
 $appUrl = Ask '  Your ReelMind website' $appUrl
 $text = Set-EnvValue $text 'REELMIND_APP_URL' $appUrl
 if (AskYes '  Use ReelMind from your phone while away (secure tunnel)?' ((Get-EnvValue $text 'REELMIND_TUNNEL') -ne '')) {

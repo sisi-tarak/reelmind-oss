@@ -4,7 +4,7 @@ Thanks for helping! Bug reports, ideas, docs, translations and code are all welc
 
 ## Ground rules
 
-- **Be kind.** Assume good intent, keep feedback about the work, and help newcomers.
+- **Be kind.** Assume good intent, keep feedback about the work, and help newcomers. Our [Code of Conduct](CODE_OF_CONDUCT.md) applies everywhere in the project.
 - **Keep it local-first.** Reels, notes and keys stay on the user's computer. Features must not send user data to new servers without a clear opt-in.
 - **Respect Instagram and creators.**
   - Nothing should download content on a server.
@@ -56,6 +56,7 @@ To work with real reels, add a Gemini key to `helper/.env` (copy `helper/.env.ex
    ```
 5. For UI changes, check both a desktop width and a phone width (390px), and add before/after screenshots to the pull request.
 6. Write clear commit messages in the imperative: "Fix duplicate reels after re-import".
+7. For changes users will notice, add a line under **Unreleased** in [CHANGELOG.md](CHANGELOG.md).
 
 ## Project layout
 
