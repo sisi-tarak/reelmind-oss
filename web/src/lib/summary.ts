@@ -184,6 +184,6 @@ export function buildSummary(items: SummaryItem[], opts: SummaryOptions, title =
     }
   }
 
-  out.push(md ? '_Made with [ReelMind](https://github.com/sisi-tarak/reelmind)_' : 'Made with ReelMind');
+  out.push(md ? '_Made with [ReelMind](https://github.com/sisi-tarak/reelmind-oss)_' : 'Made with ReelMind');
   return out.join('\n').replace(/\n{3,}/g, '\n\n').trim();
 }

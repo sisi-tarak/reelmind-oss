@@ -14,7 +14,7 @@ Thanks for helping! Bug reports, ideas, docs, translations and code are all welc
 
 ## Reporting a bug
 
-Check [existing issues](https://github.com/sisi-tarak/reelmind/issues) first, then open a **Bug report** and include:
+Check [existing issues](https://github.com/sisi-tarak/reelmind-oss/issues) first, then open a **Bug report** and include:
 - what you did, what you expected, and what happened
 - your OS, browser, Node version (`node -v`) and ReelMind version (shown when the helper starts)
 - the helper's terminal output and any browser console errors
@@ -31,8 +31,8 @@ Open a **Feature request**. Explain the problem it solves and who it helps, not 
 You need Node.js 22+. yt-dlp and ffmpeg are only needed for real downloads; demo mode works without them.
 
 ```bash
-git clone https://github.com/<you>/reelmind.git
-cd reelmind
+git clone https://github.com/<you>/reelmind-oss.git
+cd reelmind-oss
 npm install
 npm run dev:demo      # demo helper (no keys, no downloads) + app at http://localhost:5173
 ```

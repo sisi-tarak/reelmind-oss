@@ -215,3 +215,10 @@ test('many inbox saves at the same moment never fail or lose reels', async () =>
     server.close();
   }
 });
+test('an overloaded provider is told apart from a used-up quota', async () => {
+  const { isServerBusy } = await import('../src/ai.js');
+  assert.equal(isServerBusy({ message: '{"error":{"code":503,"message":"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.","status":"UNAVAILABLE"}}' }), true);
+  assert.equal(isServerBusy({ status: 503, message: 'Service Unavailable' }), true);
+  assert.equal(isServerBusy({ status: 429, message: 'RESOURCE_EXHAUSTED: quota exceeded' }), false);
+  assert.equal(isServerBusy({ status: 400, message: 'Invalid argument' }), false);
+});

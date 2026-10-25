@@ -36,6 +36,8 @@ export const config = {
     apiKey: geminiKeys[0] || '',
     apiKeys: geminiKeys,
     model: env.GEMINI_MODEL || 'gemini-3.8-flash',
+    // Used for a reel when the main model stays overloaded (Google's 503 "high demand"). Optional.
+    fallbackModel: (env.GEMINI_FALLBACK_MODEL || '').trim(),
     embedModel: env.GEMINI_EMBED_MODEL || 'gemini-embedding-2',
     rpm: Math.max(1, Number(env.GEMINI_RPM) || 8),
     embedRpm: Math.max(1, Number(env.GEMINI_EMBED_RPM) || 60),

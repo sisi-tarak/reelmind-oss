@@ -128,11 +128,23 @@ async function waitForSlot(provider, signal) {
   if (wait > 0) await sleep(wait, signal);
 }
 
+/**
+ * True when the provider's servers are temporarily overloaded or down (Gemini's 503 "high demand",
+ * 500 and 504). That is Google's capacity, not your key or quota, so the key isn't rested.
+ */
+export function isServerBusy(error) {
+  const status = Number(error?.status ?? error?.code);
+  const message = String(error?.message || error);
+  return [500, 502, 503, 504].includes(status) || /\b(UNAVAILABLE|INTERNAL|DEADLINE_EXCEEDED)\b|high demand|try again later|overloaded/i.test(message);
+}
+
+const BUSY_WAITS = [5_000, 15_000, 40_000];
+
 function asRateLimit(error, provider) {
   const status = error?.status ?? error?.code;
   const message = String(error?.message || error);
   const name = provider === 'claude' ? 'Claude' : 'Gemini';
-  if (status === 429 || status === 529 || /RESOURCE_EXHAUSTED|quota|rate.?limit|overloaded/i.test(message)) {
+  if (status === 429 || status === 529 || /RESOURCE_EXHAUSTED|quota|rate.?limit/i.test(message)) {
     const match = message.match(/retry(?:Delay)?["\s:]*"?(\d+(?:\.\d+)?)s/i);
     const daily = /per ?day|PerDay|daily/i.test(message);
     return new RateLimitError(
@@ -173,12 +185,12 @@ async function geminiVideoPart(ai, videoPath, signal) {
   };
 }
 
-async function callGemini(ai, { prompt, schema, videoPath, signal }) {
+async function callGemini(ai, { prompt, schema, videoPath, signal, model }) {
   // A video uploaded with one key can only be read with that key, so upload and ask on the same one.
   const video = videoPath ? await geminiVideoPart(ai, videoPath, signal) : null;
   try {
     const response = await ai.models.generateContent({
-      model: config.gemini.model,
+      model: model || config.gemini.model,
       contents: [{ role: 'user', parts: [...(video ? [video.part] : []), { text: prompt }] }],
       config: {
         responseMimeType: 'application/json',
@@ -224,11 +236,25 @@ async function callClaude({ prompt, schema, images = [], signal }) {
  */
 export async function aiJson(req) {
   const provider = req.provider === 'claude' ? 'claude' : 'gemini';
+  let busy = 0;
   for (let attempt = 1; ; attempt++) {
     await waitForSlot(provider, req.signal);
+    // After two overloaded replies in a row, try the lighter fallback model if one is set.
+    const model = provider === 'gemini' && busy >= 2 && config.gemini.fallbackModel ? config.gemini.fallbackModel : undefined;
     try {
-      return provider === 'claude' ? await callClaude(req) : await withGeminiKey((ai) => callGemini(ai, req), req.signal);
+      return provider === 'claude' ? await callClaude(req) : await withGeminiKey((ai) => callGemini(ai, { ...req, model }), req.signal);
     } catch (error) {
+      if (!(error instanceof RateLimitError) && isServerBusy(error)) {
+        // Google's servers are busy: wait a little longer each time, then keep the reel queued instead of failing it.
+        if (busy < BUSY_WAITS.length) {
+          await sleep(BUSY_WAITS[busy] + Math.floor(Math.random() * 2000), req.signal);
+          busy += 1;
+          attempt -= 1;
+          continue;
+        }
+        const name = provider === 'claude' ? 'Claude' : 'Gemini';
+        throw new RateLimitError(`${name} is overloaded right now (the provider's servers, not your key or quota). The rest stays queued; try again in a few minutes.`, 5 * 60_000);
+      }
       const limit = error instanceof RateLimitError ? error : asRateLimit(error, provider);
       // One automatic wait-and-retry for a per-minute limit; a daily limit stops the batch.
       if (limit?.retryAfterMs && attempt === 1) {

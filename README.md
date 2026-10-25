@@ -12,7 +12,7 @@ Local-first · Free and open source · Bring your own AI key
 
 ![Licence: AGPL-3.0](https://img.shields.io/badge/licence-AGPL--3.0-1f2430)
 ![Node 22+](https://img.shields.io/badge/node-22%2B-1f2430)
-![CI](https://github.com/sisi-tarak/reelmind/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/sisi-tarak/reelmind-oss/actions/workflows/ci.yml/badge.svg)
 ![PRs welcome](https://img.shields.io/badge/PRs-welcome-ffd84d)
 
 <img src="docs/screenshots/board.png" alt="The workflow board: topics on coloured notes, each wired to its reels and the tools they use" width="100%" />
@@ -173,8 +173,8 @@ You need a free [Gemini API key](https://aistudio.google.com/apikey).
 Install [Node.js 22+](https://nodejs.org), [yt-dlp](https://github.com/yt-dlp/yt-dlp#installation) and [ffmpeg](https://ffmpeg.org) (recommended). Then:
 
 ```bash
-git clone https://github.com/sisi-tarak/reelmind.git
-cd reelmind
+git clone https://github.com/sisi-tarak/reelmind-oss.git
+cd reelmind-oss
 npm install
 npm run helper
 ```
@@ -366,13 +366,13 @@ Good first contributions:
 - Interface translations
 - Import from YouTube Shorts and TikTok saves
 
-Have an idea? [Open a feature request](https://github.com/sisi-tarak/reelmind/issues/new/choose).
+Have an idea? [Open a feature request](https://github.com/sisi-tarak/reelmind-oss/issues/new/choose).
 
 ## Author
 
 Built by **Sisindri** ([@sisi-tarak](https://github.com/sisi-tarak)), founder of **[Webortex](https://webortex.com)**.
 
-If ReelMind helps you, please ⭐ [star the repository](https://github.com/sisi-tarak/reelmind) or [sponsor the work](https://github.com/sponsors/sisi-tarak). Want an AI tool like this for your business? [Webortex builds them](https://webortex.com).
+If ReelMind helps you, please ⭐ [star the repository](https://github.com/sisi-tarak/reelmind-oss) or [sponsor the work](https://github.com/sponsors/sisi-tarak). Want an AI tool like this for your business? [Webortex builds them](https://webortex.com).
 
 ## Licence
 
