@@ -157,10 +157,11 @@ export const helper = {
     }),
   rewrite: (kind: string, content: string, instruction: string, provider?: Provider) =>
     call<{ content: string; model: string }>('/api/rewrite', { method: 'POST', body: JSON.stringify({ kind, content, instruction, provider }) }),
-  /** The reel's cover image, or null when the helper doesn't have one. */
-  thumb: async (shortcode: string): Promise<Blob | null> => {
+  /** The reel's cover image; 'missing' when the helper has none, null when it couldn't be reached. */
+  thumb: async (shortcode: string): Promise<Blob | 'missing' | null> => {
     try {
       const res = await fetch(`${helperUrl()}/api/thumbs/${shortcode}`, { headers: { 'X-ReelMind-Code': connectCode() }, ...loopbackInit(helperUrl()) });
+      if (res.status === 404) return 'missing';
       return res.ok ? await res.blob() : null;
     } catch {
       return null;

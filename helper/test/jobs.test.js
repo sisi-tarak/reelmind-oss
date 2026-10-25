@@ -223,3 +223,33 @@ test('an overloaded provider is told apart from a used-up quota', async () => {
   assert.equal(isServerBusy({ status: 429, message: 'RESOURCE_EXHAUSTED: quota exceeded' }), false);
   assert.equal(isServerBusy({ status: 400, message: 'Invalid argument' }), false);
 });
+
+test('creator names use the @handle, and old numeric ids are repaired', async () => {
+  const { creatorFromInfo, repairCreators, writeAnalysis } = await import('../src/store.js');
+  const { config } = await import('../src/config.js');
+  assert.equal(creatorFromInfo({ uploader: 'Farhan | AI Agents', uploader_id: '315904127', channel: 'farhannrakhangi' }), 'farhannrakhangi');
+  assert.equal(creatorFromInfo({ uploader_id: 'devtipsdaily' }), 'devtipsdaily');
+  const dir = path.join(config.dataDir, 'reels', 'OLDnum1234');
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, 'video.info.json'), JSON.stringify({ uploader_id: '315904127', channel: 'farhannrakhangi' }));
+  await writeAnalysis('OLDnum1234', { shortcode: 'OLDnum1234', title: 'x', creator: '315904127' });
+  assert.ok((await repairCreators()) >= 1);
+  assert.equal((await readAnalysis('OLDnum1234')).creator, 'farhannrakhangi');
+});
+
+test('a missing cover is rebuilt from the saved video', async (t) => {
+  const { detectTools, run } = await import('../src/tools.js');
+  const { config } = await import('../src/config.js');
+  const { ensureThumb } = await import('../src/covers.js');
+  if (!(await detectTools()).ffmpeg.found) return t.skip('ffmpeg not installed');
+  const dir = path.join(config.dataDir, 'reels', 'NOcover123');
+  fs.mkdirSync(dir, { recursive: true });
+  await run(config.ffmpegBin, ['-y', '-v', 'error', '-f', 'lavfi', '-i', 'color=blue:s=320x240:d=2', path.join(dir, 'video.mp4')], { timeoutMs: 30000 });
+  config.demo = false;
+  try {
+    const file = await ensureThumb('NOcover123');
+    assert.ok(file && fs.existsSync(file), 'cover written next to the video');
+  } finally {
+    config.demo = true;
+  }
+});

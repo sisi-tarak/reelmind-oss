@@ -18,7 +18,7 @@ function duration(sec: number | null) {
 export function ReelThumb({ reel, analysis, show, className, compact }: { reel: Reel; analysis: Analysis; show: boolean; className?: string; compact?: boolean }) {
   const { ready } = useBatch();
   const sample = reel.collections?.includes(SAMPLE_COLLECTION) || analysis.provider === 'demo';
-  const { url, loading } = useThumb(reel.shortcode, show && !sample, ready && analysis.hasThumb);
+  const { url, loading, retry } = useThumb(reel.shortcode, show && !sample, ready);
   const mood = moodFor(analysis.contentType);
   const Icon = mood.icon;
   const time = duration(analysis.durationSec);
@@ -34,10 +34,17 @@ export function ReelThumb({ reel, analysis, show, className, compact }: { reel: 
             <>
               <Icon className="size-8" style={{ color: mood.color }} strokeWidth={1.5} />
               <span className={`items-center gap-1 px-3 text-[11px] text-muted-foreground ${compact ? 'hidden' : 'flex'}`}>
-                {sample ? 'Sample reel, no cover' : !analysis.hasThumb ? 'No cover saved' : ready ? (
-                  <>
-                    <ImageOff className="size-3" /> Cover not found
-                  </>
+                {sample ? 'Sample reel, no cover' : analysis.hasThumb === false ? 'No cover saved' : ready ? (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      retry();
+                    }}
+                    className="flex items-center gap-1 rounded px-1 underline-offset-2 hover:text-foreground hover:underline"
+                  >
+                    <ImageOff className="size-3" /> Cover not loaded · Try again
+                  </button>
                 ) : (
                   'Start the helper to see the cover'
                 )}

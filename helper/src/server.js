@@ -6,6 +6,7 @@ import { config, providerReady } from './config.js';
 import { topicBoard, weeklyDigest } from './boards.js';
 import { cancelJob, getCurrentJob, getJob, isBusy, serializeJob, startJob } from './jobs.js';
 import { connectToken, isShortcode, listAnalyzed, readAnalysis, readEmbedding, readInbox, thumbPath, updateInbox } from './store.js';
+import { ensureThumb } from './covers.js';
 import { extractAssets, rewriteAsset } from './assets.js';
 import { keyStatus } from './ai.js';
 import { phoneLink, remoteState } from './tunnel.js';
@@ -227,9 +228,10 @@ export function createServer() {
     }
   });
 
-  app.get('/api/thumbs/:id', (req, res) => {
+  app.get('/api/thumbs/:id', async (req, res) => {
     if (!isShortcode(req.params.id)) return res.sendStatus(400);
-    const file = thumbPath(req.params.id);
+    // Rebuilds a missing cover from the saved video or the original thumbnail link when it can.
+    const file = thumbPath(req.params.id) || (await ensureThumb(req.params.id));
     if (!file) return res.sendStatus(404);
     res.setHeader('Cache-Control', 'max-age=86400');
     res.sendFile(file);

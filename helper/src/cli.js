@@ -8,6 +8,7 @@ import { phoneLink, startTunnel } from './tunnel.js';
 import { config } from './config.js';
 import { createServer, VERSION } from './server.js';
 import { detectTools } from './tools.js';
+import { repairCreators } from './store.js';
 
 // First run: no key anywhere and someone at the keyboard. Ask once and save it to helper/.env.
 async function firstRunSetup() {
@@ -44,6 +45,8 @@ const { app, code } = createServer();
 
 // Listen on both IPv4 and IPv6 loopback, so "localhost" works in every browser. Never on the network.
 const ipv4 = app.listen(config.port, '127.0.0.1', async () => {
+  // Quietly fix creator names saved as numbers by older versions.
+  if (!config.demo) repairCreators().catch(() => undefined);
   const tools = await detectTools();
   const ok = (v) => (v ? 'ok' : 'missing');
   const lines = [

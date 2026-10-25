@@ -4,22 +4,27 @@ import { useEffect, useState } from 'react';
 import { db } from './db';
 import { helper } from './helper';
 
-const missing = new Set<string>();
+// Covers the helper said it doesn't have, and when. Asked again after a while: the helper can rebuild a
+// cover from the saved video, and a failed request (helper restarting, slow network) is never final.
+const missing = new Map<string, number>();
+const RETRY_MS = 2 * 60 * 1000;
 const inflight = new Map<string, Promise<Blob | null>>();
 
 async function loadThumb(shortcode: string, canAsk: boolean): Promise<Blob | null> {
   const cached = await db.thumbs.get(shortcode);
   if (cached) return cached.blob;
-  if (!canAsk || missing.has(shortcode)) return null;
+  const missedAt = missing.get(shortcode);
+  if (!canAsk || (missedAt && Date.now() - missedAt < RETRY_MS)) return null;
   let pending = inflight.get(shortcode);
   if (!pending) {
-    pending = helper.thumb(shortcode).then(async (blob) => {
+    pending = helper.thumb(shortcode).then(async (result) => {
       inflight.delete(shortcode);
-      if (blob && blob.type.startsWith('image/')) {
-        await db.thumbs.put({ shortcode, blob }).catch(() => undefined);
-        return blob;
+      if (result instanceof Blob && result.type.startsWith('image/')) {
+        missing.delete(shortcode);
+        await db.thumbs.put({ shortcode, blob: result }).catch(() => undefined);
+        return result;
       }
-      missing.add(shortcode);
+      if (result === 'missing') missing.set(shortcode, Date.now());
       return null;
     });
     inflight.set(shortcode, pending);
@@ -34,6 +39,7 @@ async function loadThumb(shortcode: string, canAsk: boolean): Promise<Blob | nul
 export function useThumb(shortcode: string, enabled: boolean, canAsk: boolean) {
   const [url, setUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     if (!enabled) return;
     let live = true;
@@ -52,6 +58,11 @@ export function useThumb(shortcode: string, enabled: boolean, canAsk: boolean) {
       if (objectUrl) URL.revokeObjectURL(objectUrl);
       setUrl(null);
     };
-  }, [shortcode, enabled, canAsk]);
-  return { url, loading };
+  }, [shortcode, enabled, canAsk, attempt]);
+  /** Asks the helper again right away, for example after it was restarted. */
+  const retry = () => {
+    missing.delete(shortcode);
+    setAttempt((n) => n + 1);
+  };
+  return { url, loading, retry };
 }

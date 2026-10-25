@@ -41,7 +41,8 @@ export async function syncLibrary(): Promise<number> {
               ...existing,
               status: 'analyzed',
               failReason: undefined,
-              creator: existing.creator || analysis.creator || '',
+              // Older versions saved a numeric account id; prefer the @handle when the notes have one.
+              creator: (/^\d+$/.test(existing.creator || '') && analysis.creator && !/^\d+$/.test(analysis.creator) ? analysis.creator : existing.creator) || analysis.creator || '',
               savedAt: existing.savedAt || analysis.savedAt || null,
               collections: Array.from(new Set([...(existing.collections || []), ...(analysis.collections || [])])),
             }

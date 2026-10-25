@@ -96,12 +96,23 @@ export async function findVideo(shortcode) {
   return video ? path.join(dir, video) : null;
 }
 
+/**
+ * The creator's @handle from yt-dlp's info. Instagram puts the numeric account id in uploader_id and the
+ * handle in channel, so a number is only used when nothing better is there.
+ */
+export function creatorFromInfo(info) {
+  const candidates = [info?.channel, info?.uploader_id, info?.uploader_url?.match(/instagram\.com\/([\w.]+)/)?.[1]]
+    .map((v) => (typeof v === 'string' ? v.trim().replace(/^@/, '') : ''))
+    .filter(Boolean);
+  return candidates.find((v) => /^[\w.]+$/.test(v) && !/^\d+$/.test(v)) || candidates[0] || (typeof info?.uploader === 'string' ? info.uploader : '');
+}
+
 export async function readInfo(shortcode) {
   const info = await readJson(path.join(reelDir(shortcode), 'video.info.json'));
   if (!info) return null;
   return {
     caption: info.description || info.title || '',
-    creator: info.uploader_id || info.channel || info.uploader || '',
+    creator: creatorFromInfo(info),
     duration: info.duration || null,
     uploadDate: info.upload_date || null,
   };
@@ -138,6 +149,34 @@ export function updateInbox(change) {
     await writeInbox(next);
     return next;
   });
+}
+
+/** The thumbnail URL yt-dlp saw, for rebuilding a missing cover. It may have expired. */
+export async function thumbUrl(shortcode) {
+  const info = await readJson(path.join(reelDir(shortcode), 'video.info.json'));
+  const url = info?.thumbnail || info?.thumbnails?.at?.(-1)?.url;
+  return typeof url === 'string' && /^https:\/\//.test(url) ? url : null;
+}
+
+/**
+ * Older reels saved the creator's numeric Instagram id instead of their @handle. Fixes those notes from the
+ * saved video info, once, so the app shows the right name (it reloads notes whose file changed).
+ */
+export async function repairCreators() {
+  const root = path.join(config.dataDir, 'reels');
+  if (!existsSync(root)) return 0;
+  let fixed = 0;
+  for (const id of await fs.readdir(root)) {
+    if (!isShortcode(id)) continue;
+    const analysis = await readAnalysis(id);
+    if (!analysis || !/^\d+$/.test(String(analysis.creator || ''))) continue;
+    const info = await readJson(path.join(reelDir(id), 'video.info.json'));
+    const handle = info ? creatorFromInfo(info) : '';
+    if (!handle || /^\d+$/.test(handle)) continue;
+    await writeAnalysis(id, { ...analysis, creator: handle });
+    fixed += 1;
+  }
+  return fixed;
 }
 
 export function thumbPath(shortcode) {

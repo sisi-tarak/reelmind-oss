@@ -11,7 +11,7 @@ import { embedText } from './ai.js';
 import { demoEmbedding } from './boards.js';
 import { demoAnalysis, demoInfo } from './demo.js';
 import { embeddingText } from './prompt.js';
-import { isShortcode, readAnalysis, readEmbedding, writeAnalysis, writeEmbedding } from './store.js';
+import { isShortcode, readAnalysis, readEmbedding, thumbPath, writeAnalysis, writeEmbedding } from './store.js';
 
 const jobs = new Map();
 let current = null;
@@ -153,7 +153,7 @@ async function analyzeItem(job, item) {
       provider: job.provider,
       videoPath: fetched.videoPath,
       caption: fetched.info?.caption || '',
-      creator: fetched.info?.creator || item.creator,
+      creator: item.creator || fetched.info?.creator || '',
       captionOnly: fetched.captionOnly,
       durationSec: fetched.info?.duration,
       prior,
@@ -165,11 +165,11 @@ async function analyzeItem(job, item) {
   const result = {
     shortcode: item.shortcode,
     ...rest,
-    creator: fetched.info?.creator || item.creator || '',
+    creator: item.creator || fetched.info?.creator || '',
     caption: fetched.info?.caption || '',
     durationSec: fetched.info?.duration || null,
     captionOnly: source === 'caption',
-    hasThumb: !config.demo,
+    hasThumb: !config.demo && Boolean(thumbPath(item.shortcode) || fetched.videoPath),
     savedAt: item.savedAt || prior?.savedAt || null,
     collections: item.collections?.length ? item.collections : prior?.collections || [],
     analyzedAt: new Date().toISOString(),
