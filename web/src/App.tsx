@@ -42,7 +42,7 @@ function Logo() {
 
 function HelperPill({ onClick }: { onClick: () => void }) {
   const { health, healthError, browserBlocked } = useBatch();
-  const state = browserBlocked ? 'blocked' : healthError || !health ? 'off' : health.needsCode ? 'code' : health.demo ? 'demo' : (health.gemini.configured || health.claude.configured) && health.tools.ytdlp.found ? 'ok' : 'setup';
+  const state = browserBlocked ? 'blocked' : healthError || !health ? 'off' : health.needsCode ? 'code' : health.demo ? 'demo' : (health.gemini?.configured || health.claude?.configured) && health.tools?.ytdlp?.found ? 'ok' : 'setup';
   const label = { blocked: 'Allow local access', off: 'Helper offline', code: 'Connect helper', demo: 'Demo mode', ok: 'Helper ready', setup: 'Finish setup' }[state];
   const dot = { blocked: 'bg-destructive', off: 'bg-destructive', code: 'bg-highlight', demo: 'bg-highlight', ok: 'bg-success', setup: 'bg-highlight' }[state];
   return (

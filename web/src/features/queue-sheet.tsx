@@ -36,7 +36,7 @@ function HelperWarning() {
   else if (health?.needsCode) text = 'The helper is running but this site isn\'t connected yet. Open Settings and enter the connect code from the helper window.';
   else if (health && !health.demo && provider === 'gemini' && !health.gemini?.configured) text = 'No Gemini key yet. Add GEMINI_API_KEY to helper/.env and restart the helper.';
   else if (health && !health.demo && provider === 'claude' && !health.claude?.configured) text = 'No Claude key yet. Add ANTHROPIC_API_KEY to helper/.env and restart the helper, or switch to Gemini.';
-  else if (health && !health.demo && health.tools && !health.tools.ytdlp.found) text = 'yt-dlp is not installed, so reels cannot be downloaded. See Setup in Settings.';
+  else if (health && !health.demo && health.tools && !health.tools.ytdlp?.found) text = 'yt-dlp is not installed, so reels cannot be downloaded. See Setup in Settings.';
   if (!text) return null;
   return (
     <div className="mx-6 flex gap-2 rounded-lg bg-destructive/10 px-3 py-2.5 text-[13px] text-destructive">
@@ -176,7 +176,7 @@ function Selection({ queue }: { queue: Reel[] }) {
               <p className="flex-1 text-[12.5px] leading-snug text-muted-foreground">
                 {health?.demo
                   ? 'Demo mode: sample results, no downloads or AI calls.'
-                  : `About ${plural(selected.length, 'AI call')} on ${provider === 'claude' ? health?.claude?.model || 'Claude' : health?.gemini.model || 'Gemini'}.`}
+                  : `About ${plural(selected.length, 'AI call')} on ${provider === 'claude' ? health?.claude?.model || 'Claude' : health?.gemini?.model || 'Gemini'}.`}
               </p>
               {(healthError && !health) || health?.needsCode ? (
                 <Button

@@ -230,8 +230,8 @@ function Reanalyze({ reel, analysis }: { reel: Reel; analysis: Analysis }) {
   const running = job?.status === 'running';
   const isSample = reel.collections?.includes('ReelMind sample');
   const options = [
-    { id: 'gemini' as const, label: 'Gemini', note: 'watches the video and hears the speech', ok: Boolean(health?.demo || health?.gemini.configured) },
-    { id: 'claude' as const, label: 'Claude', note: 'reads still frames and the transcript, often deeper notes', ok: Boolean(health?.demo || health?.claude.configured) },
+    { id: 'gemini' as const, label: 'Gemini', note: 'watches the video and hears the speech', ok: Boolean(health?.demo || health?.gemini?.configured) },
+    { id: 'claude' as const, label: 'Claude', note: 'reads still frames and the transcript, often deeper notes', ok: Boolean(health?.demo || health?.claude?.configured) },
   ];
   return (
     <div className="flex flex-col gap-3 border-t px-6 py-4">

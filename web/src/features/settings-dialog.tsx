@@ -159,21 +159,21 @@ export function SettingsDialog({
               {!health.demo && (
                 <>
                   <Row
-                    ok={health.gemini.configured}
-                    label={health.gemini.configured ? `${(health.gemini.keys || 1) > 1 ? `${health.gemini.keys} Gemini keys` : 'Gemini key'} set, using ${health.gemini.model}` : 'No Gemini key'}
+                    ok={health.gemini?.configured}
+                    label={health.gemini?.configured ? `${(health.gemini?.keys || 1) > 1 ? `${health.gemini?.keys} Gemini keys` : 'Gemini key'} set, using ${health.gemini?.model}` : 'No Gemini key'}
                     hint={
-                      health.gemini.configured
-                        ? `${(health.gemini.keys || 1) > 1 ? `${health.gemini.keysAvailable ?? health.gemini.keys} of ${health.gemini.keys} ready; when one reaches its limit the next takes over. ` : 'Add up to 4 more as GEMINI_API_KEY_2 to _5 in helper/.env (each from a different Google Cloud project) to keep going when one hits its daily limit. '}Paced to ${health.gemini.rpm * (health.gemini.keys || 1)} calls a minute.`
+                      health.gemini?.configured
+                        ? `${(health.gemini?.keys || 1) > 1 ? `${health.gemini?.keysAvailable ?? health.gemini?.keys} of ${health.gemini?.keys} ready; when one reaches its limit the next takes over. ` : 'Add up to 4 more as GEMINI_API_KEY_2 to _5 in helper/.env (each from a different Google Cloud project) to keep going when one hits its daily limit. '}Paced to ${(health.gemini?.rpm ?? 0) * (health.gemini?.keys || 1)} calls a minute.`
                         : 'Get a free key at aistudio.google.com/apikey and put it in helper/.env as GEMINI_API_KEY.'
                     }
                   />
                   <Row
-                    ok={health.claude.configured}
-                    label={health.claude.configured ? `Claude key set, using ${health.claude.model}` : 'Claude not set up (optional)'}
-                    hint={health.claude.configured ? undefined : 'Add ANTHROPIC_API_KEY to helper/.env to re-analyze reels and build boards with Claude. Billed by Anthropic per use.'}
+                    ok={health.claude?.configured}
+                    label={health.claude?.configured ? `Claude key set, using ${health.claude?.model}` : 'Claude not set up (optional)'}
+                    hint={health.claude?.configured ? undefined : 'Add ANTHROPIC_API_KEY to helper/.env to re-analyze reels and build boards with Claude. Billed by Anthropic per use.'}
                   />
-                  <Row ok={health.tools.ytdlp.found} label={health.tools.ytdlp.found ? `yt-dlp ${health.tools.ytdlp.version}` : 'yt-dlp not found'} hint={health.tools.ytdlp.found ? undefined : 'Install with "pip install -U yt-dlp", "brew install yt-dlp" or "winget install yt-dlp".'} />
-                  <Row ok={health.tools.ffmpeg.found} label={health.tools.ffmpeg.found ? 'ffmpeg found' : 'ffmpeg not found'} hint={health.tools.ffmpeg.found ? undefined : 'Recommended for reliable downloads and for Claude frames.'} />
+                  <Row ok={health.tools?.ytdlp?.found} label={health.tools?.ytdlp?.found ? `yt-dlp ${health.tools?.ytdlp?.version}` : 'yt-dlp not found'} hint={health.tools?.ytdlp?.found ? undefined : 'Install with "pip install -U yt-dlp", "brew install yt-dlp" or "winget install yt-dlp".'} />
+                  <Row ok={health.tools?.ffmpeg?.found} label={health.tools?.ffmpeg?.found ? 'ffmpeg found' : 'ffmpeg not found'} hint={health.tools?.ffmpeg?.found ? undefined : 'Recommended for reliable downloads and for Claude frames.'} />
                   <Row ok={health.cookies} label={health.cookies ? 'Instagram sign-in cookies set' : 'No Instagram cookies set'} hint={health.cookies ? undefined : 'If downloads fail with a login message, set YTDLP_COOKIES_BROWSER in helper/.env.'} />
                 </>
               )}

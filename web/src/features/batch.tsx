@@ -299,8 +299,8 @@ export function BatchProvider({ children }: { children: ReactNode }) {
   }, [job?.status]);
   useEffect(() => {
     if (!ready || running || !health || health.busy) return;
-    const keyOk = health.demo || (provider === 'claude' ? health.claude.configured : health.gemini.configured);
-    if (!keyOk || (!health.demo && !health.tools.ytdlp.found)) return;
+    const keyOk = health.demo || (provider === 'claude' ? health.claude?.configured : health.gemini?.configured);
+    if (!keyOk || (!health.demo && !health.tools?.ytdlp?.found)) return;
     let stopped = false;
     const check = async () => {
       if (stopped || autoBusy.current || Date.now() < pausedUntil.current) return;
