@@ -225,9 +225,13 @@ function Body({ reel, analysis, related, onOpenReel, onShare }: { reel: Reel; an
 }
 
 function Reanalyze({ reel, analysis }: { reel: Reel; analysis: Analysis }) {
-  const { start, ready, health, job, starting } = useBatch();
+  const { start, ready, health, job, starting, error } = useBatch();
   const [asking, setAsking] = useState(false);
+  const [requested, setRequested] = useState(false);
   const running = job?.status === 'running';
+  // This reel's place in the current batch, so a re-analysis shows its progress and any error right here.
+  const mine = job?.kind === 'analyze' ? job.items.find((i) => i.shortcode === reel.shortcode) : undefined;
+  const busy = Boolean(mine && running && mine.step !== 'done' && mine.step !== 'failed' && mine.step !== 'cached');
   const isSample = reel.collections?.includes('ReelMind sample');
   const options = [
     { id: 'gemini' as const, label: 'Gemini', note: 'watches the video and hears the speech', ok: Boolean(health?.demo || health?.gemini?.configured) },
@@ -256,6 +260,7 @@ function Reanalyze({ reel, analysis }: { reel: Reel; analysis: Analysis }) {
                 className="h-auto justify-start py-2 text-left"
                 disabled={!o.ok || starting}
                 onClick={async () => {
+                  setRequested(true);
                   await start([reel], { force: true, provider: o.id });
                   setAsking(false);
                 }}
@@ -270,6 +275,15 @@ function Reanalyze({ reel, analysis }: { reel: Reel; analysis: Analysis }) {
           </div>
         </div>
       )}
+      {busy && (
+        <p className="flex items-center gap-2 text-[13px] text-muted-foreground" role="status">
+          <Loader2 className="size-3.5 animate-spin" /> {mine?.step === 'fetching' ? 'Downloading the reel…' : mine?.step === 'analyzing' ? 'Writing new notes…' : 'Waiting its turn…'}
+        </p>
+      )}
+      {mine?.step === 'failed' && <p className="rounded-md bg-destructive/10 px-3 py-2 text-[13px] text-destructive" role="alert">Re-analyze failed: {mine.error || 'unknown error'}</p>}
+      {mine?.step === 'done' && !running && <p className="text-[13px] text-success">Updated with new notes.</p>}
+      {mine && !running && job?.status !== 'done' && mine.step !== 'done' && mine.step !== 'failed' && job?.message && <p className="rounded-md bg-muted px-3 py-2 text-[13px]">{job.message}</p>}
+      {requested && !mine && error && <p className="rounded-md bg-destructive/10 px-3 py-2 text-[13px] text-destructive" role="alert">{error}</p>}
     </div>
   );
 }

@@ -261,6 +261,9 @@ export async function aiJson(req) {
         await sleep(limit.retryAfterMs, req.signal);
         continue;
       }
+      if (!limit && /fetch failed|ENOTFOUND|ECONNRESET|ETIMEDOUT|EAI_AGAIN/i.test(String(error?.message || error))) {
+        throw new Error(`Couldn't reach ${provider === 'claude' ? 'Claude' : 'Gemini'}. Check your internet connection, then try again.`);
+      }
       throw limit || error;
     }
   }

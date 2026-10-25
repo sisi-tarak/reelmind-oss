@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { BrainCircuit, CalendarCheck, History, Library, ChevronDown, Download, Inbox, Loader2, Plus, Settings, Sparkles, Star, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -99,6 +99,21 @@ export default function App() {
 
   const [importOpen, setImportOpen] = useState(false);
   const [queueOpen, setQueueOpen] = useState(false);
+  // A batch that ends with problems opens the Analyze panel, so its errors show up even when it was
+  // started from a reel's notes or ran on its own. A batch that couldn't start shows a notice.
+  const { job: watchedJob, error: batchError, setNotice: notify } = useBatch();
+  const lastJobState = useRef<string | null>(null);
+  useEffect(() => {
+    const prev = lastJobState.current;
+    lastJobState.current = watchedJob ? `${watchedJob.id}:${watchedJob.status}` : null;
+    if (!watchedJob || watchedJob.status === 'running' || prev !== `${watchedJob.id}:running`) return;
+    if (watchedJob.counts.failed > 0 || watchedJob.status !== 'done') setQueueOpen(true);
+  }, [watchedJob]);
+  useEffect(() => {
+    if (batchError && !queueOpen) notify(batchError);
+    // Only when a new error appears.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [batchError]);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [digestOpen, setDigestOpen] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);

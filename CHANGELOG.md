@@ -8,6 +8,7 @@ All notable changes to ReelMind are listed here. Versions follow [Semantic Versi
 - Reel covers that showed "Cover not found" now load. A cover that fails once is tried again, and the helper rebuilds a missing cover from the saved video or the original thumbnail.
 - Creators show their @handle instead of a number. Notes saved by 1.0.0 are corrected automatically when the helper starts.
 - The app no longer goes blank ("Cannot read properties of undefined (reading 'configured')") when it reaches a helper that is still waiting for the connect code.
+- Errors now show as soon as a batch stops: the Analyze panel opens by itself, and a re-analysis started from a reel's notes shows its progress and any error right there. Network problems say "Couldn't reach Gemini" instead of "fetch failed".
 
 ## [1.0.0] - 2026-10-25
 
